@@ -1,7 +1,7 @@
 # OneAI Backend Engineer Recruitment Mini-Project
 
 ## Core Requirements
-1. Don't use LLM.
+1. Try not using LLM for this test.
 2. Scrape the featured news from [https://tw-nba.udn.com/nba/index](https://tw-nba.udn.com/nba/index).
 3. Design an appropriate Model using any framework (FastAPI, Django, Gin) and store the scraped news in a DB.
 4. Implement the following pages using AJAX:
@@ -17,6 +17,20 @@
     * Include both upgrade and downgrade paths
 2. Implement proper database indexing strategies for optimal query performance
 
+## Code Quality Requirements
+1. Implement logging system:
+    * Log all critical operations
+    * Implement proper error handling
+2. Follow PEP 8 style guide for Python code
+3. Well Doc-String for all major functions and classes
+4. Implement type hints for better code clarity
+
+## Advanced Requirements (Optional, not required, just a bonus)
+1. Implement unit tests for at least 90% coverage rate.
+2. Implement automated scheduled scraping.
+3. Use a Websocket service to immediately notify the frontend when new news is scraped.
+4. The implemented news list API should be able to withstand a 100 QPS load test.
+
 ## Testing Requirements
 1. Implement comprehensive unit tests with minimum 90% coverage:
     * Test all API endpoints
@@ -28,19 +42,6 @@
 3. Implement load tests:
     * Test API performance under different loads
     * Document test results and methodologies
-
-## Code Quality Requirements
-1. Implement logging system:
-    * Log all critical operations
-    * Implement proper error handling
-2. Follow PEP 8 style guide for Python code
-3. Well Doc-String for all major functions and classes
-4. Implement type hints for better code clarity
-
-## Advanced Requirements
-1. Implement automated scheduled scraping.
-2. Use a Websocket service to immediately notify the frontend when new news is scraped.
-3. The implemented news list API should be able to withstand a 100 QPS load test.
 
 ## CI/CD Requirements
 1. Set up GitHub Actions for:

@@ -13,17 +13,14 @@
 
 ## Database Management Requirements
 1. Implement database migrations using Alembic:
-    * Create proper migration scripts for all database changes
-    * Include both upgrade and downgrade paths
-2. Implement proper database indexing strategies for optimal query performance
+    * Create proper migration scripts for all database changes.
+    * Include both upgrade and downgrade paths.
+2. Implement proper database indexing strategies for optimal query performance.
 
 ## Code Quality Requirements
-1. Implement logging system:
-    * Log all critical operations
-    * Implement proper error handling
-2. Follow PEP 8 style guide for Python code
-3. Well Doc-String for all major functions and classes
-4. Implement type hints for better code clarity
+1. Follow PEP 8 style guide for Python code.
+2. Well Doc-String for all major functions and classes.
+3. Implement type hints for better code clarity.
 
 ## Advanced Requirements (Optional, not required, just a bonus)
 1. Implement unit tests for at least 90% coverage rate.
@@ -31,35 +28,13 @@
 3. Use a Websocket service to immediately notify the frontend when new news is scraped.
 4. The implemented news list API should be able to withstand a 100 QPS load test.
 
-## Testing Requirements
-1. Implement comprehensive unit tests with minimum 90% coverage:
-    * Test all API endpoints
-    * Test database models and operations
-    * Test scraping functionality
-2. Implement integration tests:
-    * Test the complete flow from scraping to storage
-    * Test API responses with different scenarios
-3. Implement load tests:
-    * Test API performance under different loads
-    * Document test results and methodologies
-
-## CI/CD Requirements
-1. Set up GitHub Actions for:
-    * Running all tests
-    * Code quality checks
-    * Automated deployment
-2. Implement proper environment management:
-    * Development
-    * Staging
-    * Production
-
 ## Submission Requirements
 1. Include a comprehensive README.md with:
     * Setup instructions
     * API documentation
     * Testing instructions
     * Migration commands
-2. Provide environment configuration examples
-3. Document any assumptions or design decisions made
+2. Provide environment configuration examples.
+3. Document any assumptions or design decisions made.
 
 This enhanced version includes more specific technical requirements while maintaining the original scope. The additions focus on best practices in software development, particularly around database management, testing, and deployment automation.

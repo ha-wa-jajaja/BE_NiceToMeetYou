@@ -11,6 +11,7 @@
 6. Deploy this demo to a server and ensure it runs correctly.
 7. Create Your own public repository and make multiple pull requests and commits to that repository, and reply back the github public repository link when it's finished.
 
+
 ## Database Management Requirements
 1. Implement database migrations using Alembic:
     * Create proper migration scripts for all database changes.
@@ -23,10 +24,11 @@
 3. Implement type hints for better code clarity.
 
 ## Advanced Requirements (Optional, not required, just a bonus)
-1. Implement unit tests for at least 90% coverage rate.
-2. Implement automated scheduled scraping.
-3. Use a Websocket service to immediately notify the frontend when new news is scraped.
-4. The implemented news list API should be able to withstand a 100 QPS load test.
+1. Use Docker to containerize the application and database, and provide a `docker-compose.yml` file for easy deployment.
+2. Implement unit tests for at least 90% coverage rate.
+3. Implement automated scheduled scraping.
+4. Use a Websocket service to immediately notify the frontend when new news is scraped.
+5. The implemented news list API should be able to withstand a 100 QPS load test.
 
 ## Submission Requirements
 1. Include a comprehensive README.md with:

@@ -1,0 +1,108 @@
+services:
+    app:
+        build:
+            context: .
+            args:
+                - DEV=true
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./udn_nba:/udn_nba
+            - dev-static-data:/vol/web
+        command: >
+            sh -c "python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+        environment:
+            - DB_HOST=db
+            - DB_NAME=demodb
+            - DB_USER=demouser
+            - DB_PASS=demopwd
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        depends_on:
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+
+    # New service for Celery worker
+    celery:
+        build:
+            context: .
+            args:
+                - DEV=true
+        volumes:
+            - ./udn_nba:/udn_nba
+        command: celery -A udn_nba worker --loglevel=info
+        environment:
+            - DB_HOST=db
+            - DB_NAME=demodb
+            - DB_USER=demouser
+            - DB_PASS=demopwd
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        depends_on:
+            app:
+                condition: service_started
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+
+    # New service for Celery beat (scheduler)
+    celery-beat:
+        build:
+            context: .
+            args:
+                - DEV=true
+        volumes:
+            - ./udn_nba:/udn_nba
+        command: celery -A udn_nba beat --loglevel=info
+        environment:
+            - DB_HOST=db
+            - DB_NAME=demodb
+            - DB_USER=demouser
+            - DB_PASS=demopwd
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        depends_on:
+            app:
+                condition: service_started
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+
+    db:
+        image: postgres:13-alpine
+        volumes:
+            - dev-db-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=demodb
+            - POSTGRES_USER=demouser
+            - POSTGRES_PASSWORD=demopwd
+        healthcheck:
+            # NOTE: "CMD-SHELL" tells Docker to run the command using the container's shell.
+            # "pg_isready" PostgreSQL utility tool that checks if the PostgreSQL server is accepting connections.
+            test: ["CMD-SHELL", "pg_isready -U demouser -d demodb"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    redis:
+        image: redis:7.0-alpine
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis-data:/data
+        command: redis-server --save 60 1 --loglevel warning
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 5s
+            timeout: 3s
+            retries: 5
+
+volumes:
+    dev-db-data:
+    dev-static-data:
+    redis-data:

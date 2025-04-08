@@ -1,0 +1,306 @@
+[
+    {
+        "model": "tags.tag",
+        "pk": 1,
+        "fields": {
+            "name": "哈登",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 2,
+        "fields": {
+            "name": "柯瑞",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 3,
+        "fields": {
+            "name": "杜蘭特",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 4,
+        "fields": {
+            "name": "約柯奇",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 5,
+        "fields": {
+            "name": "米契爾",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 6,
+        "fields": {
+            "name": "布朗森",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 7,
+        "fields": {
+            "name": "亞歷山大",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 8,
+        "fields": {
+            "name": "唐西奇",
+            "type": "Players"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 9,
+        "fields": {
+            "name": "雷霆",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 10,
+        "fields": {
+            "name": "金塊",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 11,
+        "fields": {
+            "name": "灰狼",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 12,
+        "fields": {
+            "name": "拓荒者",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 13,
+        "fields": {
+            "name": "爵士",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 14,
+        "fields": {
+            "name": "騎士",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 15,
+        "fields": {
+            "name": "溜馬",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 16,
+        "fields": {
+            "name": "公鹿",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 17,
+        "fields": {
+            "name": "活塞",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 18,
+        "fields": {
+            "name": "公牛",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 19,
+        "fields": {
+            "name": "火箭",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 20,
+        "fields": {
+            "name": "灰熊",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 21,
+        "fields": {
+            "name": "獨行俠",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 22,
+        "fields": {
+            "name": "馬刺",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 23,
+        "fields": {
+            "name": "鵜鶘",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 24,
+        "fields": {
+            "name": "塞爾蒂克",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 25,
+        "fields": {
+            "name": "尼克",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 26,
+        "fields": {
+            "name": "暴龍",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 27,
+        "fields": {
+            "name": "籃網",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 28,
+        "fields": {
+            "name": "76人",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 29,
+        "fields": {
+            "name": "湖人",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 30,
+        "fields": {
+            "name": "快艇",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 31,
+        "fields": {
+            "name": "勇士",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 32,
+        "fields": {
+            "name": "國王",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 33,
+        "fields": {
+            "name": "太陽",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 34,
+        "fields": {
+            "name": "魔術",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 35,
+        "fields": {
+            "name": "老鷹",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 36,
+        "fields": {
+            "name": "熱火",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 37,
+        "fields": {
+            "name": "黃蜂",
+            "type": "Teams"
+        }
+    },
+    {
+        "model": "tags.tag",
+        "pk": 38,
+        "fields": {
+            "name": "巫師",
+            "type": "Teams"
+        }
+    }
+]

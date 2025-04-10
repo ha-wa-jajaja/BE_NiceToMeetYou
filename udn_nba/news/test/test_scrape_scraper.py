@@ -5,6 +5,7 @@ from news.scrape.scrapers import UdnNbaScraper
 from requests.exceptions import RequestException
 
 
+# TODO: This file long as fuck. Maybe refactor the scrapers to make it more concise
 class TestUdnNbaScraper(TestCase):
     """Test cases for UdnNbaScraper class"""
 

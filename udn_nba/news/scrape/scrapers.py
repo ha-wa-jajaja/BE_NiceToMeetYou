@@ -185,14 +185,3 @@ class UdnNbaScraper:
         except Exception as e:
             self.logger.error(f"Unexpected error in get_news_detail: {e}")
             return None
-
-    # TODO: Scraper function
-    # 1. scrape featured news
-    # if no res, simply stop and log "no new news"
-    # 2. scrape news detail pages
-    # if at least one page is successful:
-    # create NewsSession
-    # Run parsers
-    # save the news
-
-    # TODO: On finish, websocket message?

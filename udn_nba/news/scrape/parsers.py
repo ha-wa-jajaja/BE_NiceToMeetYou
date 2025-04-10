@@ -6,6 +6,7 @@ from tags.models import Tag
 from .logger import get_logger
 
 
+# TODO: Make the return values objects instead of IDs, also update test files
 class UdnNbaParsers:
 
     def __init__(self):

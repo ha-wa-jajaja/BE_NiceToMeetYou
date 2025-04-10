@@ -26,7 +26,9 @@ class News(models.Model):
     original_url = models.URLField(db_index=True)
     thumbnail_url = models.URLField()
     created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="news")
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="news", null=True, blank=True
+    )
     session = models.ForeignKey(
         NewsSession, on_delete=models.CASCADE, related_name="news"
     )

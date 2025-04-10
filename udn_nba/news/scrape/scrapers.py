@@ -6,12 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from news.models import News
 
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger("news_scraper")
+from .logger import get_logger
 
 
 class NewsData(TypedDict):
@@ -31,6 +26,7 @@ class UdnNbaScraper:
         """Initialize scraper with default configuration"""
         self.session = requests.Session()
         self.session.headers.update(self.HEADERS)
+        self.logger = get_logger("news_scraper.UdnNbaScraper")
 
     def fetch_page(self, url: str) -> Optional[str]:
         """
@@ -43,12 +39,12 @@ class UdnNbaScraper:
             HTML content or None if an error occurs
         """
         try:
-            logger.info(f"Fetching URL: {url}")
+            self.logger.info(f"Fetching URL: {url}")
             response = self.session.get(url, timeout=30)
             response.raise_for_status()
             return response.text
         except requests.RequestException as e:
-            logger.error(f"Error fetching {url}: {str(e)}")
+            self.logger.error(f"Error fetching {url}: {str(e)}")
             return None
 
     def check_if_news_exists(self, title: str, url: str) -> bool:
@@ -96,14 +92,14 @@ class UdnNbaScraper:
 
                 news_exists = self.check_if_news_exists(title, url)
                 if news_exists:
-                    logger.info(f"News already exists: {url}")
+                    self.logger.info(f"News already exists: {url}")
                     continue
                 else:
                     featured_news_urls.append(url)
 
         return featured_news_urls
 
-    def get_news_detail(self, url: str) -> Optional[dict]:
+    def get_news_detail(self, url: str) -> Optional[NewsData]:
         """
         Process a news article data.
 

@@ -25,6 +25,7 @@ class Command(BaseCommand):
         news_session = NewsSession.objects.create()
 
         # TODO: Make news fetching asynchronous
+        # TODO: transaction.atomic?
         for url in new_featured_news:
             news_detail = scraper.get_news_detail(url)
 

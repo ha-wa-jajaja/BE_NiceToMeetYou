@@ -99,6 +99,8 @@ class UdnNbaScraper:
 
         return featured_news_urls
 
+    # TODO: build a logger message hub for a more concise and compact error message
+    # TODO: Build a selector function to extract news info
     def get_news_detail(self, url: str) -> Optional[NewsData]:
         """
         Process a news article data.

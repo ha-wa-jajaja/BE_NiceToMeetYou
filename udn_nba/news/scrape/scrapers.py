@@ -47,7 +47,7 @@ class UdnNbaScraper:
             self.logger.error(f"Error fetching {url}: {str(e)}")
             return None
 
-    def check_if_news_exists(self, title: str, url: str) -> bool:
+    def check_if_news_exists(self, url: str) -> bool:
         """
         Check if the news with the given title and url already exists in the database
 
@@ -58,7 +58,7 @@ class UdnNbaScraper:
         Returns:
             True if the news exists, False otherwise
         """
-        return News.objects.filter(title=title, original_url=url).exists()
+        return News.objects.filter(original_url=url).exists()
 
     def get_homepage_featured_news_urls(self) -> List[str]:
         """
@@ -87,10 +87,10 @@ class UdnNbaScraper:
             # Find the anchor tag within the slide
             anchor = slide.find("a")
             if anchor:
-                title = anchor.get("title", "")
                 url = anchor.get("href", "")
 
-                news_exists = self.check_if_news_exists(title, url)
+                news_exists = self.check_if_news_exists(url)
+
                 if news_exists:
                     self.logger.info(f"News already exists: {url}")
                     continue
@@ -165,9 +165,22 @@ class UdnNbaScraper:
 
             # Get Content (required)
             try:
-                paragraphs = soup.select("#story_body_content p")
-                if paragraphs:
-                    result["content"] = "\n".join([p.text.strip() for p in paragraphs])
+                paragraphs = soup.select("#story_body_content > span > p")
+
+                # Filter out paragraphs that contain or are just figures
+                cleaned_paragraphs = []
+
+                for p in paragraphs:
+                    # Skip paragraphs that contain figure elements
+                    if p.find("figure"):
+                        continue
+                    # Skip empty paragraphs
+                    if not p.text.strip():
+                        continue
+                    cleaned_paragraphs.append(p.text.strip())
+
+                if cleaned_paragraphs:
+                    result["content"] = "\n".join(cleaned_paragraphs)
                     if not result[
                         "content"
                     ].strip():  # Check if content is just whitespace

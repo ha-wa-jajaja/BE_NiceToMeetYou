@@ -32,7 +32,7 @@ class News(models.Model):
     session = models.ForeignKey(
         NewsSession, on_delete=models.CASCADE, related_name="news"
     )
-    tags = models.ManyToManyField("tags.Tag", related_name="news")
+    tags = models.ManyToManyField("tags.Tag", related_name="news", blank=True)
 
     def __str__(self):
         return self.title

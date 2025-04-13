@@ -89,6 +89,7 @@ class UdnNbaScraper:
                 - author: Author of the article (may be None if not available)
                 - content: Main content of the article
         """
+        self.logger.info(f"Fetching news detail from {url}")
         try:
             html_content = self.fetch_page(url)
 

@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from tags.serializers import TagSerializer
 
-from .models import Author, NewsSession
+from .models import Author, News, NewsSession
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -22,3 +23,33 @@ class NewsSessionSerializer(serializers.ModelSerializer):
 
     def get_news_count(self, obj) -> int:
         return obj.news.count()
+
+
+class NewsSerializer(serializers.ModelSerializer):
+    """Serializer for news."""
+
+    class Meta:
+        model = News
+        fields = [
+            "id",
+            "title",
+            "thumbnail_url",
+            "created_at",
+        ]
+
+
+class NewsDetailSerializer(NewsSerializer):
+    """Serializer for news detail."""
+
+    author = AuthorSerializer(read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+    session = NewsSessionSerializer(read_only=True)
+
+    class Meta(NewsSerializer.Meta):
+        fields = NewsSerializer.Meta.fields + [
+            "author",
+            "content",
+            "session",
+            "tags",
+            "original_url",
+        ]

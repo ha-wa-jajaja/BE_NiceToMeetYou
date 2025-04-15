@@ -1,47 +1,22 @@
-from drf_spectacular.utils import (
-    OpenApiParameter,
-    OpenApiTypes,
-    extend_schema,
-    extend_schema_view,
-)
-from rest_framework import mixins, viewsets
+from django_filters.rest_framework import CharFilter, DjangoFilterBackend, FilterSet
+from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
-from tags.models import Tag
 from tags.serializers import TagDetailSerializer, TagSerializer
 
+from .models import Tag
 
-@extend_schema_view(
-    list=extend_schema(
-        parameters=[
-            OpenApiParameter(
-                "name",
-                OpenApiTypes.STR,
-                description="Name of the tag to filter",
-            ),
-            OpenApiParameter(
-                "type",
-                OpenApiTypes.STR,
-                description="Type of the tag to filter",
-            ),
-        ],
-    ),
-)
-class TagViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
-):
-    """Viewset for tags."""
 
-    queryset = Tag.objects.all()
-    serializer_class = TagDetailSerializer
+class TagFilter(FilterSet):
+    """Filter for Tag model."""
 
-    def get_queryset(self):
-        """Retrieve tags."""
+    name = CharFilter(field_name="name", lookup_expr="icontains")
+    type = CharFilter(field_name="type", lookup_expr="exact")
 
-        name = self.request.query_params.get("name")
-        tag_type = self.request.query_params.get("type")
-        queryset = self.queryset
+    def filter_queryset(self, queryset):
+        """Custom filtering to ensure only one filter is used at a time."""
+        name = self.form.cleaned_data.get("name")
+        tag_type = self.form.cleaned_data.get("type")
 
-        #  Check if both filters are provided
         if name and tag_type:
             raise ValidationError(
                 {
@@ -49,17 +24,23 @@ class TagViewSet(
                 }
             )
 
-        if name:
-            queryset = queryset.filter(name__icontains=name)
-        elif tag_type:
-            queryset = queryset.filter(type=tag_type)
+        return super().filter_queryset(queryset)
 
-        return queryset.distinct()
+    class Meta:
+        model = Tag
+        fields = ["name", "type"]
+
+
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset for tags."""
+
+    queryset = Tag.objects.all()
+    serializer_class = TagDetailSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TagFilter
 
     def get_serializer_class(self):
         """Return the serializer class for request."""
-
         if self.action == "list":
             return TagSerializer
-
         return self.serializer_class

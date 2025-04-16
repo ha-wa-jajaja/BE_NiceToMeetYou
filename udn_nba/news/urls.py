@@ -6,6 +6,7 @@ from . import views
 router = DefaultRouter()
 router.register("authors", views.AuthorViewSet)
 router.register("sessions", views.NewsSessionViewSet)
+router.register("", views.NewsViewSet)
 
 app_name = "news"
 

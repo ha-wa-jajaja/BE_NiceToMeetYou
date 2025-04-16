@@ -2,9 +2,15 @@ from django.db.models.functions import ExtractDay, ExtractMonth, ExtractYear
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter
 from rest_framework import filters, status, viewsets
 from rest_framework.exceptions import ValidationError
+from rest_framework.pagination import PageNumberPagination
 
-from .models import Author, NewsSession
-from .serializers import AuthorSerializer, NewsSessionSerializer
+from .models import Author, News, NewsSession
+from .serializers import (
+    AuthorSerializer,
+    NewsDetailSerializer,
+    NewsSerializer,
+    NewsSessionSerializer,
+)
 
 
 class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
@@ -57,3 +63,29 @@ class NewsSessionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NewsSessionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = NewsSessionDateFilter
+
+
+class NewsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = ["tags", "author", "session"]
+    search_fields = ["title"]
+    ordering_fields = ["created_at"]
+    ordering = ["-created_at"]
+
+    pagination_class = PageNumberPagination
+    pagination_class.page_query_param = "page"
+    pagination_class.page_size_query_param = "size"
+    pagination_class.page_size = 12
+    pagination_class.max_page_size = 96
+
+    def get_serializer_class(self):
+        """Return the serializer class for request."""
+        if self.action == "list":
+            return NewsSerializer
+        return self.serializer_class

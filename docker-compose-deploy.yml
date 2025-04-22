@@ -2,47 +2,38 @@ services:
     app:
         build:
             context: .
-            args:
-                - DEV=true
-        ports:
-            - "8000:8000"
+        restart: always
         volumes:
-            - ./udn_nba:/udn_nba
-            - dev-static-data:/vol/web
-        command: >
-            sh -c "python manage.py migrate &&
-            python manage.py load_tags &&
-            python manage.py runserver 0.0.0.0:8000"
+            - static-data:/vol/web
         environment:
             - DB_HOST=db
-            - DB_NAME=demodb
-            - DB_USER=demouser
-            - DB_PASS=demopwd
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
             - REDIS_HOST=redis
             - REDIS_PORT=6379
-            - DEBUG=1
+            - SECRET_KEY=${DJANGO_SECRET_KEY}
+            - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
         depends_on:
             db:
                 condition: service_healthy
             redis:
                 condition: service_healthy
 
-    # New service for Celery worker
     celery:
         build:
             context: .
-            args:
-                - DEV=true
-        volumes:
-            - ./udn_nba:/udn_nba
+        restart: always
         command: celery -A udn_nba worker --loglevel=info
         environment:
             - DB_HOST=db
-            - DB_NAME=demodb
-            - DB_USER=demouser
-            - DB_PASS=demopwd
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
             - REDIS_HOST=redis
             - REDIS_PORT=6379
+            - SECRET_KEY=${DJANGO_SECRET_KEY}
+            - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
         depends_on:
             app:
                 condition: service_started
@@ -51,22 +42,20 @@ services:
             redis:
                 condition: service_healthy
 
-    # New service for Celery beat (scheduler)
     celery-beat:
         build:
             context: .
-            args:
-                - DEV=true
-        volumes:
-            - ./udn_nba:/udn_nba
+        restart: always
         command: celery -A udn_nba beat --loglevel=info
         environment:
             - DB_HOST=db
-            - DB_NAME=demodb
-            - DB_USER=demouser
-            - DB_PASS=demopwd
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
             - REDIS_HOST=redis
             - REDIS_PORT=6379
+            - SECRET_KEY=${DJANGO_SECRET_KEY}
+            - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
         depends_on:
             app:
                 condition: service_started
@@ -77,24 +66,22 @@ services:
 
     db:
         image: postgres:13-alpine
+        restart: always
         volumes:
-            - dev-db-data:/var/lib/postgresql/data
+            - postgres-data:/var/lib/postgresql/data
         environment:
-            - POSTGRES_DB=demodb
-            - POSTGRES_USER=demouser
-            - POSTGRES_PASSWORD=demopwd
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASS}
         healthcheck:
-            # NOTE: "CMD-SHELL" tells Docker to run the command using the container's shell.
-            # "pg_isready" PostgreSQL utility tool that checks if the PostgreSQL server is accepting connections.
-            test: ["CMD-SHELL", "pg_isready -U demouser -d demodb"]
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
             interval: 5s
             timeout: 5s
             retries: 5
 
     redis:
         image: redis:7.0-alpine
-        ports:
-            - "6379:6379"
+        restart: always
         volumes:
             - redis-data:/data
         command: redis-server --save 60 1 --loglevel warning
@@ -104,7 +91,18 @@ services:
             timeout: 3s
             retries: 5
 
+    proxy:
+        build:
+            context: ./proxy
+        restart: always
+        depends_on:
+            - app
+        ports:
+            - 80:8000
+        volumes:
+            - static-data:/vol/static
+
 volumes:
-    dev-db-data:
-    dev-static-data:
+    postgres-data:
+    static-data:
     redis-data:

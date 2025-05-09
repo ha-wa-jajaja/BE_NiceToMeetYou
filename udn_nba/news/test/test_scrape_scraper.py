@@ -13,21 +13,6 @@ class UdnNbaHomeScraperTests(TestCase):
         self.logger = MagicMock()
         self.scraper = UdnNbaHomeScraper(self.logger)
 
-    def test_check_if_news_exists(self):
-        # Mock the News.objects.filter().exists() call
-        with patch("news.models.News.objects") as mock_news_objects:
-            # Test when news exists
-            mock_news_objects.filter.return_value.exists.return_value = True
-            self.assertTrue(
-                self.scraper.check_if_news_exists("http://example.com/news/1")
-            )
-
-            # Test when news doesn't exist
-            mock_news_objects.filter.return_value.exists.return_value = False
-            self.assertFalse(
-                self.scraper.check_if_news_exists("http://example.com/news/2")
-            )
-
     def test_parse_soup_get_featured_news(self):
         # Create sample HTML content for testing
         html_content = """
@@ -47,25 +32,42 @@ class UdnNbaHomeScraperTests(TestCase):
         """
         soup = BeautifulSoup(html_content, "lxml")
 
-        # Mock the check_if_news_exists method
-        self.scraper.check_if_news_exists = MagicMock()
-
         # Case 1: No news exists yet
-        self.scraper.check_if_news_exists.return_value = False
-        urls = self.scraper.parse_soup_get_featured_news(soup)
-        self.assertEqual(len(urls), 2)  # Should only get 2 URLs (excluding the clone)
-        self.assertIn("http://example.com/news/1", urls)
-        self.assertIn("http://example.com/news/3", urls)
+        with patch("news.models.News.objects.filter") as mock_filter:
+            # Mock the queryset returned by filter()
+            mock_values_list = mock_filter.return_value.values_list
+            mock_values_list.return_value = []
+
+            urls = self.scraper.parse_soup_get_featured_news(soup)
+
+            # Verify the filter was called with the right arguments
+            mock_filter.assert_called_once_with(
+                original_url__in=[
+                    "http://example.com/news/1",
+                    "http://example.com/news/3",
+                ]
+            )
+
+            # Check results
+            self.assertEqual(
+                len(urls), 2
+            )  # Should only get 2 URLs (excluding the clone)
+            self.assertIn("http://example.com/news/1", urls)
+            self.assertIn("http://example.com/news/3", urls)
 
         # Case 2: Some news already exists
-        self.scraper.check_if_news_exists.side_effect = (
-            lambda url: url == "http://example.com/news/1"
-        )
-        urls = self.scraper.parse_soup_get_featured_news(soup)
-        self.assertEqual(
-            len(urls), 1
-        )  # Should only get 1 URL (excluding the clone and existing news)
-        self.assertEqual(urls[0], "http://example.com/news/3")
+        with patch("news.models.News.objects.filter") as mock_filter:
+            # Mock the queryset returned by filter()
+            mock_values_list = mock_filter.return_value.values_list
+            mock_values_list.return_value = ["http://example.com/news/1"]
+
+            urls = self.scraper.parse_soup_get_featured_news(soup)
+
+            # Check results
+            self.assertEqual(
+                len(urls), 1
+            )  # Should only get 1 URL (excluding the clone and existing news)
+            self.assertEqual(urls[0], "http://example.com/news/3")
 
 
 class UdnNbaNewsScraperTests(TestCase):

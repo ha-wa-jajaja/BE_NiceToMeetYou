@@ -144,19 +144,6 @@ class UdnNbaHomeScraper:
         """Initialize the extractor with optional logger."""
         self.logger = logger
 
-    def check_if_news_exists(self, url: str) -> bool:
-        """
-        Check if the news with the given title and url already exists in the database
-
-        Args:
-            title: The title of the news to check
-            url: The url of the news to check
-
-        Returns:
-            True if the news exists, False otherwise
-        """
-        return News.objects.filter(original_url=url).exists()
-
     def parse_soup_get_featured_news(self, soup: BeautifulSoup) -> List[str]:
         """
         Parse the BeautifulSoup object to extract featured news URLs
@@ -172,6 +159,8 @@ class UdnNbaHomeScraper:
             slide for slide in all_slides if "clone" not in slide.get("id", "")
         ]
 
+        all_urls = []
+
         # Extract href and title from the anchor elements inside non-clone slides
         for slide in non_clone_slides:
             # Find the anchor tag within the slide
@@ -179,13 +168,16 @@ class UdnNbaHomeScraper:
             if anchor:
                 url = anchor.get("href", "")
 
-                news_exists = self.check_if_news_exists(url)
+                if url:
+                    all_urls.append(url)
 
-                if news_exists:
-                    self.logger.info(f"News already exists: {url}")
-                    continue
-                else:
-                    featured_news_urls.append(url)
+        existing_urls = set(
+            News.objects.filter(original_url__in=all_urls).values_list(
+                "original_url", flat=True
+            )
+        )
+
+        featured_news_urls = [url for url in all_urls if url not in existing_urls]
 
         return featured_news_urls
 
